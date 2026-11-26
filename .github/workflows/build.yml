@@ -1,0 +1,93 @@
+name: Build
+
+# Builds the macOS .dmg and the Windows installer + portable zip on every push to main
+# (or on demand), then tags the commit as v<version>-build.<run number> and publishes
+# a GitHub Release with the files attached.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      tag: ${{ steps.v.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        run: |
+          VERSION=$(python3 packaging/windows/get_version.py)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION-build.$GITHUB_RUN_NUMBER" >> "$GITHUB_OUTPUT"
+
+  macos:
+    needs: version
+    runs-on: macos-14            # Apple Silicon (arm64)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build .app and .dmg
+        run: PYTHON=python ./packaging/build_mac_app.sh --dmg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: dist/*.dmg
+          if-no-files-found: error
+
+  windows:
+    needs: version
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Ensure Inno Setup 6
+        shell: pwsh
+        run: |
+          $paths = @("${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe", "$env:ProgramFiles\Inno Setup 6\ISCC.exe")
+          if (-not ($paths | Where-Object { Test-Path $_ })) { choco install innosetup -y --no-progress }
+      - name: Build exe, portable zip and installer
+        shell: cmd
+        run: packaging\windows\build_windows.bat
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: |
+            dist/*-portable.zip
+            dist/*-Setup-*.exe
+          if-no-files-found: error
+
+  release:
+    needs: [version, macos, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Tag commit and publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.version.outputs.tag }}
+        run: |
+          ls -l artifacts
+          gh release create "$TAG" artifacts/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Bulk Photo Editor ${{ needs.version.outputs.version }} (build $GITHUB_RUN_NUMBER)" \
+            --generate-notes
