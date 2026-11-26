@@ -221,3 +221,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# MACOS
+.DS_Store
+
+# Build dir
+build/*

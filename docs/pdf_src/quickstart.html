@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Bulk Photo Editor - Quick Start</title>
+<style>
+@page { size: Letter; margin: 16mm 16mm 18mm; }
+:root { --ink:#1d1d1f; --dim:#6e6e73; --accent:#0a6ee6; --line:#d8d8dd; --soft:#f4f5f8; --dark:#1e1e20; }
+* { box-sizing: border-box; }
+body { font: 10.4pt/1.45 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); margin: 0; }
+h1 { font-size: 25pt; margin: 0; letter-spacing: -.5px; }
+h2 { font-size: 15pt; margin: 20px 0 6px; padding-bottom: 4px; border-bottom: 2px solid var(--accent); break-after: avoid; }
+h3 { font-size: 11.5pt; margin: 12px 0 3px; break-after: avoid; }
+p { margin: 5px 0; } ul, ol { margin: 4px 0 4px 20px; padding: 0; } li { margin: 2px 0; }
+code, kbd { font: 9.2pt "SF Mono", Menlo, Consolas, monospace; background: var(--soft); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+kbd { border-bottom-width: 2px; }
+.hero { background: var(--dark); color: #f5f5f7; border-radius: 14px; padding: 20px 24px; display: flex; gap: 20px; align-items: center; }
+.hero img { width: 84px; height: 84px; } .hero .sub { color: #aeaeb4; font-size: 11pt; margin-top: 4px; }
+.hero .ver { display:inline-block; margin-top:8px; background:#0a84ff; color:#fff; border-radius:99px; padding:1px 10px; font-size:9pt; }
+table { border-collapse: collapse; width: 100%; margin: 6px 0; font-size: 9.6pt; break-inside: avoid; }
+th, td { border: 1px solid var(--line); padding: 4px 8px; text-align: left; vertical-align: top; }
+th { background: var(--soft); }
+.cols { display: flex; gap: 14px; } .cols > * { flex: 1; }
+.card { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; break-inside: avoid; }
+.card h3 { margin-top: 2px; }
+.steps { counter-reset: s; list-style: none; margin-left: 0; }
+.steps li { counter-increment: s; position: relative; padding-left: 34px; margin: 8px 0; break-inside: avoid; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; text-align: center; line-height: 24px; }
+.note { background: #eef5ff; border-left: 4px solid var(--accent); padding: 6px 10px; border-radius: 4px; margin: 8px 0; break-inside: avoid; }
+.warn { background: #fff6e8; border-left: 4px solid #e08a00; padding: 6px 10px; border-radius: 4px; margin: 8px 0; break-inside: avoid; }
+figure { margin: 8px 0; text-align: center; break-inside: avoid; } figcaption { font-size: 8.8pt; color: var(--dim); margin-top: 3px; }
+.pair { display:flex; gap:8px; align-items:flex-end; justify-content:center; } .pair img { border-radius: 6px; border:1px solid var(--line); }
+/* layout diagram */
+.win { border: 2px solid #3a3a3d; border-radius: 10px; background: #1e1e20; color: #ddd; font-size: 8.5pt; overflow: hidden; break-inside: avoid; }
+.win .bar { background:#2c2c2f; padding:5px 10px; display:flex; gap:6px; align-items:center; border-bottom:1px solid #3a3a3d; }
+.win .bar i { width:9px; height:9px; border-radius:50%; display:inline-block; } .btn { background:#3a3a3d; border-radius:5px; padding:1px 8px; }
+.win .body { display:grid; grid-template-columns: 150px 1fr 190px; height: 250px; }
+.win .left { background:#28282b; padding:8px; border-right:1px solid #3a3a3d; } .win .mid { background:#161618; position:relative; }
+.win .right { background:#28282b; padding:8px; border-left:1px solid #3a3a3d; }
+.tabs span { display:inline-block; padding:1px 5px; margin:0 1px 6px 0; border-radius:4px; background:#3a3a3d; } .tabs span:first-child { background:#0a84ff; color:#fff; }
+.li { padding:2px 5px; border-radius:4px; margin-bottom:2px; } .li.sel { background:#0a84ff; color:#fff; }
+.prod { position:absolute; left:34%; top:22%; width:32%; height:52%; border-radius:50%; background:linear-gradient(120deg,#cfcfd4,#6c6c73); }
+.crop { position:absolute; left:28%; top:14%; width:44%; height:68%; border:2px solid #0a84ff; } .crop b { position:absolute; width:7px; height:7px; background:#0a84ff; }
+.grid { position:absolute; left:28%; top:14%; width:44%; height:68%; background-image: linear-gradient(to right,rgba(255,255,255,.18) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.18) 1px,transparent 1px); background-size: 33.3% 33.3%; }
+.tag { position:absolute; background:#ff9f0a; color:#000; font-weight:700; border-radius:50%; width:17px; height:17px; text-align:center; line-height:17px; font-size:8pt; z-index:5; }
+.foot { margin-top:18px; color:var(--dim); font-size:8.6pt; text-align:center; border-top:1px solid var(--line); padding-top:6px; }
+.pb { break-before: page; }
+</style></head><body>
+
+<div class="hero"><img src="../../packaging/BulkPhotoEditor.png" alt="">
+  <div><h1>Bulk Photo Editor</h1>
+  <div class="sub">Quick start &amp; reference - levels, auto-crop, colour, resize and watermarks for a whole folder of product photos</div>
+  <span class="ver">version 6.1</span></div></div>
+
+<h2>1 · Install</h2>
+<div class="cols">
+<div class="card"><h3>Windows</h3>
+<ol><li>Run <code>BulkPhotoEditor-Setup-6.1.0.exe</code> (SmartScreen: <em>More info → Run anyway</em>).</li>
+<li>Tick the right-click menu option if you want <em>Open in Bulk Photo Editor</em> on folders.</li>
+<li>Start it from the Start menu.</li></ol>
+<p>No installer? Unzip the <em>portable</em> zip and run <code>BulkPhotoEditor.exe</code>, or double-click <code>packaging\windows\install_from_source.bat</code> (needs Python 3.9+).</p></div>
+<div class="card"><h3>macOS</h3>
+<ol><li>Install Python with Tk (python.org or <code>brew install python-tk</code>).</li>
+<li><code>pip3 install -r requirements-macos.txt</code></li>
+<li><code>./packaging/build_mac_app.sh --install</code> builds the app, copies it to <em>Applications</em> and adds the Finder Quick Action.</li></ol>
+<p>Or run from source: <code>python3 run.py</code>.</p></div>
+<div class="card"><h3>From source (any OS)</h3>
+<ol><li><code>pip install -r requirements.txt</code></li>
+<li><code>python run.py</code></li>
+<li>Optional: <code>python run.py ~/Pictures/shoot-1</code> opens a folder straight away.</li></ol>
+<p>Full steps and troubleshooting: <strong>INSTALL.md</strong>.</p></div></div>
+
+<h2>2 · Five-minute quick start</h2>
+<ol class="steps">
+<li><strong>Add photos.</strong> Drag photos or folders onto the window, or use <em>Add files…</em> / <em>Add folder…</em> (<kbd>⌘/Ctrl</kbd>+<kbd>O</kbd>, <kbd>⇧</kbd>+<kbd>⌘/Ctrl</kbd>+<kbd>O</kbd>). Folders are searched including sub-folders. Originals are never changed.</li>
+<li><strong>Check the auto-crop.</strong> Select a photo (<kbd>←</kbd> <kbd>→</kbd> move between photos). The blue box is the proposed crop. Drag it, or its handles, to fix a photo by hand; the list marks hand-adjusted photos with ✂.</li>
+<li><strong>Tune the whole set.</strong> <em>Levels</em> (black point, midtones, white point per RGB channel), <em>Color</em>, <em>Size</em>, <em>Mark</em> (watermark). Changes apply to every photo - except levels set to <em>This photo only</em>.</li>
+<li><strong>Choose the output.</strong> <em>Output</em> tab: folder, filename suffix (default <code>_edited</code>), JPEG / PNG / WEBP and quality.</li>
+<li><strong>Process all</strong> (<kbd>⌘/Ctrl</kbd>+<kbd>E</kbd>). A progress bar runs; failed photos are listed at the end. Existing files are never overwritten.</li></ol>
+
+<h3>The window</h3>
+<div class="win"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
+<span style="margin-left:8px">Bulk Photo Editor</span></div>
+<div class="body">
+ <div class="left" style="position:relative"><span class="tag" style="right:6px;top:6px">1</span><div class="btn" style="display:inline-block;margin-bottom:6px">Add files…</div> <div class="btn" style="display:inline-block;margin-bottom:6px">Add folder…</div>
+  <div class="li">IMG_0412.jpg ✎</div><div class="li sel">IMG_0413.jpg ✂</div><div class="li">IMG_0414.jpg</div><div class="li">IMG_0415.jpg</div><div class="li">IMG_0416.jpg</div></div>
+ <div class="mid"><span class="tag" style="left:8px;top:8px">2</span><div class="grid"></div><div class="prod"></div>
+   <div class="crop"><b style="left:-5px;top:-5px"></b><b style="right:-5px;top:-5px"></b><b style="left:-5px;bottom:-5px"></b><b style="right:-5px;bottom:-5px"></b></div>
+   <div style="position:absolute;left:8px;bottom:6px;color:#98989f">View: Edit · Result · Original &nbsp; Grid &nbsp; Zoom</div></div>
+ <div class="right" style="position:relative"><span class="tag" style="right:6px;top:6px">3</span><div class="tabs"><span>Levels</span><span>Crop</span><span>Color</span><span>Size</span><span>Mark</span><span>Output</span></div>
+   <div>Channel · histogram</div><div style="margin-top:6px">Black point ▬▬▬</div><div>Midtones ▬▬▬</div><div>White point ▬▬▬</div>
+   <div style="position:absolute;left:8px;right:8px;bottom:8px;text-align:center;background:#0a84ff;color:#fff;border-radius:6px;padding:3px">Process all</div><span class="tag" style="right:6px;bottom:30px">4</span></div>
+</div></div>
+<p style="font-size:9pt;color:#6e6e73"><b>1</b> photo list · <b>2</b> preview with grid, crop box, zoom and view modes · <b>3</b> tool tabs · <b>4</b> process. Illustrative layout; the real window uses your system's native controls on macOS.</p>
+
+<h2>3 · Auto-crop on light <em>and</em> dark backgrounds</h2>
+<p>The app finds the product at the centre of the photo, crops where it ends (plus padding) and keeps gray areas, lines and corner blocks of the backdrop out of the crop.
+It has two <strong>profiles</strong>, each with its own settings, because the two kinds of backdrop behave differently:</p>
+<table><tr><th></th><th>Light profile</th><th>Dark profile</th></tr>
+<tr><td><strong>For</strong></td><td>white, off-white, light-gray</td><td>brown, black, coloured</td></tr>
+<tr><td><strong>Backdrop model</strong></td><td>one flat colour (the brightest part of the photo)</td><td>fitted from the photo's border: colour + lighting gradient + vignette</td></tr>
+<tr><td><strong>Noise handling</strong></td><td>standard</td><td>light blur to ignore grain and JPEG noise</td></tr>
+<tr><td><strong>Tolerance</strong> (default)</td><td>20</td><td>18</td></tr>
+<tr><td><strong>Ignore soft shadow</strong></td><td>off (×2.2 contrast when on)</td><td>off (×1.5 contrast when on)</td></tr></table>
+<p><strong>Crop tab → Background type:</strong> <em>Auto</em> (default) looks at the photo's outer border and picks the profile per photo, so a mixed folder just works.
+Force <em>Light</em> or <em>Dark</em> if a photo is classified wrongly (e.g. a mid-gray backdrop). Tolerance and shadow are set separately for each profile.</p>
+<div class="pair">
+ <figure><img src="../img/light_detect.jpg" height="150"><figcaption>Light backdrop: product (orange) and crop (blue)</figcaption></figure>
+ <figure><img src="../img/light_result.jpg" height="150"><figcaption>Result</figcaption></figure>
+ <figure><img src="../img/dark_detect.jpg" height="150"><figcaption>Dark backdrop (gradient, seam, corner block)</figcaption></figure>
+ <figure><img src="../img/dark_result.jpg" height="150"><figcaption>Result</figcaption></figure></div>
+<p style="font-size:8.8pt;color:#6e6e73">Examples are synthetic test photos.</p>
+<h3>Tuning tips</h3>
+<table><tr><th>Symptom</th><th>Try</th></tr>
+<tr><td>Crop includes a line, gray area or shadow</td><td>Lower <em>Tolerance</em> (catches fainter things); or tick <em>Ignore soft shadow</em> for that profile.</td></tr>
+<tr><td>Crop cuts a very light product on white / very dark product on brown</td><td><strong>Lower</strong> <em>Tolerance</em> for that profile and leave <em>Ignore soft shadow</em> off (it raises the contrast needed to count as product).</td></tr>
+<tr><td>Crop is too tight / too loose everywhere</td><td><em>Padding</em> and <em>Crop size adjust</em> (±% of the photo) change every auto crop at once.</td></tr>
+<tr><td>Wrong profile chosen</td><td>Set <em>Background type</em> to Light or Dark.</td></tr>
+<tr><td>Product must stay centred, but is near the edge</td><td>Keep <em>Add background to keep the product centred</em> on: the canvas is extended with the backdrop colour.</td></tr>
+<tr><td>One photo is still wrong</td><td>Drag its crop box by hand (✂). <em>Re-run auto-crop</em> resets it.</td></tr></table>
+<div class="note">Soft, deep shadows that are as dark as the product edge cannot be told apart from the product by any threshold - those are the cases where a hand-adjusted box is quickest.</div>
+
+<h2>4 · The other tabs</h2>
+<table><tr><th>Tab</th><th>What it does</th></tr>
+<tr><td><strong>Levels</strong></td><td>Black point / midtones (gamma) / white point for RGB or R, G, B separately, with a live histogram. <em>All photos</em> edits the shared levels; <em>This photo only</em> gives the current photo its own (✎). Auto, copy-to-selected, make-global and reset are in the panel.</td></tr>
+<tr><td><strong>Crop</strong></td><td>Aspect ratio, padding, crop size adjust, background type and per-profile tolerance / shadow, background extension, re-run auto-crop.</td></tr>
+<tr><td><strong>Color</strong></td><td>Brightness, contrast, saturation, sharpness, black &amp; white, sepia; rotate and flip.</td></tr>
+<tr><td><strong>Size</strong></td><td>None, <em>Fit within</em> W×H (never upscales) or percent.</td></tr>
+<tr><td><strong>Mark</strong></td><td>Text and/or <strong>image</strong> watermark (PNG with transparency works best). Seven positions: bottom / top × left / centre / right, plus centre. Opacity, text size (% of height), image width (% of photo width).</td></tr>
+<tr><td><strong>Output</strong></td><td>Folder, suffix, JPEG / PNG / WEBP, quality. Never overwrites (<code>name_1.jpg</code>…).</td></tr></table>
+
+<h2>5 · Opening photos the quick way</h2>
+<div class="cols">
+<div class="card"><h3>Drag &amp; drop</h3><p>Drop photos <em>and/or folders</em> on the window, the preview or the photo list. Folders are searched recursively; non-images are skipped; duplicates ignored. Needs the bundled <code>tkinterdnd2</code> library (included in the Windows installer); without it everything else still works.</p></div>
+<div class="card"><h3>Windows right-click</h3><p>Install with the <em>right-click menu</em> task ticked: right-click a folder (or a folder's empty background, or photos) → <strong>Open in Bulk Photo Editor</strong>. Windows 11: under <em>Show more options</em>.</p></div>
+<div class="card"><h3>macOS</h3><p>Run <code>packaging/quick_action/install_quick_action.sh</code>, then right-click a folder → <strong>Quick Actions → Open in Bulk Photo Editor</strong>. Folders and photos can also be dropped on the Dock icon, or <code>open -a "Bulk Photo Editor" folder</code>.</p></div></div>
+<p>If the app is already open (macOS), the photos are added to the current list. On the command line: <code>python run.py folder1 photo.jpg</code>.</p>
+
+<h2>6 · Keyboard &amp; mouse</h2>
+<table><tr><th>Keys</th><th>Action</th><th>Keys</th><th>Action</th></tr>
+<tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>previous / next photo</td><td><kbd>⌘/Ctrl</kbd>+<kbd>O</kbd></td><td>add photos</td></tr>
+<tr><td><kbd>Delete</kbd> / <kbd>⌫</kbd></td><td>remove selected from list</td><td><kbd>⇧⌘/Ctrl+Shift</kbd>+<kbd>O</kbd></td><td>add folder</td></tr>
+<tr><td><kbd>⌘/Ctrl</kbd>+<kbd>+</kbd> / <kbd>−</kbd></td><td>zoom in / out</td><td><kbd>⌘/Ctrl</kbd>+<kbd>E</kbd></td><td>process all</td></tr>
+<tr><td><kbd>⌘/Ctrl</kbd>+<kbd>0</kbd> / <kbd>1</kbd></td><td>fit / 100 %</td><td><kbd>⌘/Ctrl</kbd>+<kbd>[</kbd> / <kbd>]</kbd></td><td>rotate left / right</td></tr>
+<tr><td>mouse wheel</td><td>zoom</td><td>drag (or right/middle drag)</td><td>move crop box / pan</td></tr>
+<tr><td>double-click a slider</td><td>reset it</td><td></td><td></td></tr></table>
+
+<h2>7 · Troubleshooting &amp; limits</h2>
+<table><tr><th>Problem</th><th>Fix</th></tr>
+<tr><td><code>No module named tkinter</code></td><td>Windows: reinstall Python, tick <em>tcl/tk and IDLE</em>. macOS: python.org installer or <code>brew install python-tk</code>.</td></tr>
+<tr><td>Drag-and-drop does nothing</td><td><code>pip install tkinterdnd2</code>; use <em>Add files / Add folder</em> meanwhile.</td></tr>
+<tr><td>macOS: app is light, not dark</td><td><code>pip install pyobjc-framework-Cocoa</code> (otherwise the app uses its own dark theme).</td></tr>
+<tr><td>Preview is slow on huge photos</td><td>The preview uses a reduced copy; the export always uses the full-size original.</td></tr>
+<tr><td>Windows SmartScreen / antivirus warning</td><td>The installer is unsigned; see INSTALL.md → <em>Signing</em>.</td></tr></table>
+<ul><li>Auto-crop is tuned for products on <strong>plain</strong> light or dark backdrops; busy or patterned backgrounds need a hand-drawn box.</li>
+<li>Gray regions touching the product, and soft shadows as dark as the product, can be included in the crop.</li>
+<li>Auto-detection was tuned on synthetic and sample photos - always glance through the results of a new kind of shoot.</li></ul>
+<div class="foot">Bulk Photo Editor 6.1 · originals are never modified · see README.md, INSTALL.md and docs/ for more</div>
+</body></html>

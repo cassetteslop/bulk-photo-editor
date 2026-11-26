@@ -1,0 +1,5 @@
+-r requirements.txt
+# Optional but recommended on a Mac: lets the app switch itself to Dark Aqua and show its own name in the menu bar.
+pyobjc-framework-Cocoa>=9.0
+# Needed only to build the .app
+py2app>=0.28
