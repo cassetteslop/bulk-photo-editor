@@ -227,3 +227,5 @@ __marimo__/
 
 # Build dir
 build/*
+# PyInstaller spec used by the Windows build (keep it in git)
+!packaging/windows/BulkPhotoEditor.spec
